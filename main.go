@@ -31,7 +31,7 @@ import (
 // @in header
 // @name Authorization
 
-const hnyDataset = "realworld-go"
+const hnyDataset = "realworld"
 
 func main() {
 	// Initialize beeline
