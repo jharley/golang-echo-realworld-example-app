@@ -40,8 +40,9 @@ func main() {
 		log.Println("WARN - HONEYCOMB_WRITEKEY is not set")
 	}
 	beeline.Init(beeline.Config{
-		WriteKey: hnyWriteKey,
-		Dataset:  hnyDataset,
+		WriteKey:    hnyWriteKey,
+		Dataset:     hnyDataset,
+		ServiceName: "realworld-echo",
 		// for demonstration, send the event to STDOUT intead of Honeycomb.
 		// Remove the STDOUT setting when filling in a real write key.
 		//STDOUT: true,
