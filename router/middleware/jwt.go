@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/honeycombio/beeline-go"
 	"github.com/labstack/echo/v4"
 	"github.com/xesina/golang-echo-realworld-example-app/utils"
 )
@@ -54,6 +55,9 @@ func JWTWithConfig(config JWTConfig) echo.MiddlewareFunc {
 			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 				userID := uint(claims["id"].(float64))
 				c.Set("user", userID)
+				// add user_id to trace data
+				beeline.AddFieldToTrace(c.Request().Context(), "user.id", userID)
+
 				return next(c)
 			}
 			return c.JSON(http.StatusForbidden, utils.NewError(ErrJWTInvalid))

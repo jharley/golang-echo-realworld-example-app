@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/honeycombio/beeline-go"
 	"github.com/labstack/echo/v4"
 	"github.com/xesina/golang-echo-realworld-example-app/model"
 	"github.com/xesina/golang-echo-realworld-example-app/utils"
@@ -94,6 +95,8 @@ func (h *Handler) Articles(c echo.Context) error {
 		}
 	}
 
+	beeline.AddField(c.Request().Context(), "article.count", count)
+
 	return c.JSON(http.StatusOK, newArticleListResponse(h.userStore, userIDFromToken(c), articles, count))
 }
 
@@ -131,6 +134,8 @@ func (h *Handler) Feed(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, nil)
 	}
+
+	beeline.AddField(c.Request().Context(), "article.count", count)
 
 	return c.JSON(http.StatusOK, newArticleListResponse(h.userStore, userIDFromToken(c), articles, count))
 }
@@ -307,6 +312,8 @@ func (h *Handler) GetComments(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
+	beeline.AddField(c.Request().Context(), "article.comment.count", len(cm))
+
 	return c.JSON(http.StatusOK, newCommentListResponse(c, cm))
 }
 
@@ -444,6 +451,8 @@ func (h *Handler) Tags(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
+
+	beeline.AddField(c.Request().Context(), "article.tag.count", len(tags))
 
 	return c.JSON(http.StatusOK, newTagListResponse(tags))
 }
